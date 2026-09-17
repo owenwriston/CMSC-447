@@ -1,0 +1,80 @@
+@startuml
+scale 3
+top to bottom direction
+
+actor "Subcontractor" as Sub
+actor "Contractor" as Con
+actor "Project Owner" as Owner
+actor "Admin" as Admin
+actor "User" as User
+actor "Backend" as Back
+
+Sub --|> User
+Con --|> User
+Owner --|> User
+Admin --|> User
+
+rectangle "View / Edit Project" {
+  usecase "View Specific Project" as UC5
+  usecase "Show Floorplan PDFs With Task Stamps on Each" as UC5a
+  usecase "Filters" as UC5b
+
+  usecase "Edit Project" as UC4
+  usecase "Add/Remove Contractors" as UC4a
+  usecase "Add/Remove Subcontractors" as UC4b
+  usecase "Add/Remove Tasks" as UC4c
+  usecase "Edit Task Status" as UC4d
+  usecase "Add/Remove Attachments" as UC4e
+}
+
+' --- Group: View Specific Project ---
+UC5 -[hidden]down-> UC5a
+UC5a -[hidden]down-> UC5b
+
+' --- Group: Edit Project ---
+UC4 -[hidden]down-> UC4a
+UC4a -[hidden]down-> UC4b
+UC4b -[hidden]down-> UC4c
+UC4c -[hidden]down-> UC4d
+UC4d -[hidden]down-> UC4e
+
+' --- Keep groups side by side ---
+UC5 -[hidden]right-> UC4
+
+User --> UC5
+UC5 .> UC5a : <<include>>
+UC5a --> Back : loads PDFs and stamps
+
+UC5b .> UC5 : <<extend>>
+UC5b .> UC5a : <<extend>>
+
+' Editing extends off viewing a project
+UC5 .> UC4 : <<extend>>
+
+Owner --> UC4
+Admin --> UC4
+
+' Owner/Admin only
+UC4 .> UC4a : <<include>>
+
+' Owner/Admin/Contractor
+UC4 .> UC4b : <<include>>
+Con --> UC4b
+UC4 .> UC4c : <<include>>
+Con --> UC4c
+
+' Owner/Admin/Contractor/Subcontractor
+UC4 .> UC4d : <<include>>
+Con --> UC4d
+Sub --> UC4d
+UC4 .> UC4e : <<include>>
+Con --> UC4e
+Sub --> UC4e
+
+UC4a --> Back
+UC4b --> Back
+UC4c --> Back
+UC4d --> Back
+UC4e --> Back
+
+@enduml

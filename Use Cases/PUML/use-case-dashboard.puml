@@ -1,0 +1,35 @@
+@startuml
+scale 3
+top to bottom direction
+
+actor "Subcontractor" as Sub
+actor "Contractor" as Con
+actor "Project Owner" as Owner
+actor "Admin" as Admin
+actor "User" as User
+actor "Backend" as Back
+
+Sub --|> User
+Con --|> User
+Owner --|> User
+Admin --|> User
+
+rectangle "Main Dashboard" {
+  usecase "Main Dashboard" as UC2
+  usecase "Load Assigned Projects List" as UC2c
+  usecase "Filters" as UC2a
+  usecase "Settings" as UC2b
+}
+
+UC2 -[hidden]down-> UC2c
+UC2c -[hidden]down-> UC2a
+UC2a -[hidden]down-> UC2b
+
+User --> UC2
+UC2 .> UC2c : <<include>>
+UC2c --> Back : queries assigned projects
+
+UC2b .> UC2 : <<extend>>
+UC2a .> UC2c : <<extend>>
+
+@enduml

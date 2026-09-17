@@ -1,0 +1,140 @@
+@startuml
+scale 1600 width
+top to bottom direction
+
+actor "Subcontractor" as Sub
+actor "Contractor" as Con
+actor "Project Owner" as Owner
+actor "Admin" as Admin
+actor "User" as User
+actor "Backend" as Back
+
+Sub --|> User
+Con --|> User
+Owner --|> User
+Admin --|> User
+
+rectangle "Punchlist Software" {
+  usecase "Create Account" as UC0
+  usecase "Enter User Details" as UC0a
+
+  usecase "Log In" as UC1
+  usecase "Verify Details" as UC1a
+  usecase "Display Login Error(s)" as UC1b
+
+  usecase "Main Dashboard" as UC2
+  usecase "Filters" as UC2a
+  usecase "Settings" as UC2b
+  usecase "Load Assigned Projects List" as UC2c
+
+  usecase "Create New Project" as UC3
+  usecase "Upload Floorplan PDFs" as UC3a
+  usecase "Assign Contractors" as UC3b
+
+  usecase "Edit Project" as UC4
+  usecase "Add/Remove Contractors" as UC4a
+  usecase "Add/Remove Subcontractors" as UC4b
+  usecase "Add/Remove Tasks" as UC4c
+  usecase "Edit Task Status" as UC4d
+  usecase "Add/Remove Attachments" as UC4e
+
+  usecase "View Specific Project" as UC5
+  usecase "Show Floorplan PDFs With Task Stamps on Each" as UC5a
+  usecase "Filters" as UC5b
+
+
+}
+
+' --- Force group order left to right ---
+UC0 -[hidden]right-> UC1
+UC1 -[hidden]right-> UC2
+UC2 -[hidden]right-> UC3
+UC3 -[hidden]right-> UC4
+UC4 -[hidden]right-> UC5
+
+' --- Group: Create Account ---
+UC0 -[hidden]down-> UC0a
+
+' --- Group: Log In ---
+UC1 -[hidden]down-> UC1a
+UC1a -[hidden]down-> UC1b
+
+' --- Group: Main Dashboard ---
+UC2 -[hidden]down-> UC2a
+UC2a -[hidden]down-> UC2b
+UC2b -[hidden]down-> UC2c
+
+' --- Group: Create New Project ---
+UC3 -[hidden]down-> UC3a
+UC3a -[hidden]down-> UC3b
+
+' --- Group: Edit Project ---
+UC4 -[hidden]down-> UC4a
+UC4a -[hidden]down-> UC4b
+UC4b -[hidden]down-> UC4c
+UC4c -[hidden]down-> UC4d
+UC4d -[hidden]down-> UC4e
+
+' --- Group: View Specific Project ---
+UC5 -[hidden]down-> UC5a
+UC5a -[hidden]down-> UC5b
+
+
+User --> UC0
+UC0 .> UC0a : <<include>>
+
+User --> UC1
+
+UC1 .> UC1a : <<include>>
+UC1 .> UC1b : <<extend>>
+UC1a --> Back
+
+User --> UC2
+
+UC2a .> UC2 : <<extend>>
+UC2b .> UC2 : <<extend>>
+UC2 .> UC2c : <<include>>
+UC2a .> UC2c : <<extend>>
+UC2c --> Back
+
+Owner --> UC3
+Admin --> UC3
+UC3 .> UC3a : <<include>>
+UC3 .> UC3b : <<include>>
+UC3a --> Back
+UC3b --> Back
+
+Owner --> UC4
+Admin --> UC4
+
+' Only Owner/Admin can add/remove contractors
+UC4 .> UC4a : <<include>>
+
+' Owner/Admin/Contractor can add/remove subcontractors
+UC4 .> UC4b : <<include>>
+Con --> UC4b
+
+' Owner/Admin/Contractor can add/remove tasks
+UC4 .> UC4c : <<include>>
+Con --> UC4c
+
+' Owner/Admin/Contractor/Subcontractor can edit task status
+UC4 .> UC4d : <<include>>
+Con --> UC4d
+Sub --> UC4d
+
+' Owner/Admin/Contractor/Subcontractor can add/remove attachments
+UC4 .> UC4e : <<include>>
+Con --> UC4e
+Sub --> UC4e
+
+
+User --> UC5
+UC5a --> Back
+
+UC5 .> UC5a : <<include>>
+UC5b .> UC5 : <<extend>>
+UC5b .> UC5a : <<extend>>
+
+
+@enduml

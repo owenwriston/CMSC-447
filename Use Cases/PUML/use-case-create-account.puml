@@ -1,0 +1,44 @@
+@startuml
+scale 3
+top to bottom direction
+
+actor "Subcontractor" as Sub
+actor "Contractor" as Con
+actor "Project Owner" as Owner
+actor "Admin" as Admin
+actor "User" as User
+actor "Backend" as Back
+
+Sub --|> User
+Con --|> User
+Owner --|> User
+Admin --|> User
+
+rectangle "Punchlist Software - Create Account" {
+  usecase "Create Account" as UC0
+  usecase "Enter Account Details" as UC0a
+  usecase "Validate Field Requirements" as UC0b
+  usecase "Save New User" as UC0c
+  usecase "View Validation Error" as UC0d
+  usecase "View 'Account Already Exists' Error" as UC0f
+}
+
+UC0 -[hidden]down-> UC0a
+UC0a -[hidden]down-> UC0b
+UC0b -[hidden]down-> UC0c
+UC0c -[hidden]down-> UC0d
+UC0d -[hidden]down-> UC0f
+
+User --> UC0
+
+UC0 .> UC0a : <<include>>
+UC0a .> UC0b : <<include>>
+
+UC0c .> UC0b : <<extend>>
+UC0d .> UC0b : <<extend>>
+UC0f .> UC0b : <<extend>>
+
+UC0b --> Back : checks for existing users with these fields
+UC0c --> Back : stores new user
+
+@enduml
