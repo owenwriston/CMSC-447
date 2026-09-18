@@ -1,0 +1,106 @@
+@startuml
+scale 1.5
+hide circle
+skinparam linetype ortho
+left to right direction
+skinparam nodesep 60
+skinparam ranksep 100
+
+entity "User" as User {
+  * user_id : UUID <<PK>>
+  --
+  fname : VARCHAR
+  lname : VARCHAR
+  email : VARCHAR <<unique>>
+  password_hash : VARCHAR
+  role_type : Vector/Array
+  created_at : TIMESTAMP
+}
+
+entity "Admin" as Admin {
+  * user_id : UUID <<PK, FK>>
+  --
+  permissions_level : Vector/Array
+}
+
+entity "Project Owner" as Owner {
+  * user_id : UUID <<PK, FK>>
+  --
+  permissions_level : Vector/Array
+}
+
+entity "Contractor" as Con {
+  * user_id : UUID <<PK, FK>>
+  --
+  permissions_level : Vector/Array
+}
+
+entity "Subcontractor" as Sub {
+  * user_id : UUID <<PK, FK>>
+  --
+  permissions_level : Vector/Array
+}
+
+entity "Project" as Project {
+  * project_id : UUID <<PK>>
+  --
+  # owner_id : UUID <<FK>>
+  name : VARCHAR
+  location : VARCHAR
+  status : Vector/Array
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "Floorplan" as Floorplan {
+  * floorplan_id : UUID <<PK>>
+  --
+  # project_id : UUID <<FK>>
+  file_url/location : VARCHAR
+  page_number : INT
+  uploaded_by_user_id : UUID <<FK>>
+  uploaded_at : TIMESTAMP
+}
+
+entity "Task" as Task {
+  * task_id : UUID <<PK>>
+  --
+  # project_id : UUID <<FK>>
+  # floorplan_id : UUID <<FK>>
+  # assigned_contractor_id : UUID <<FK>>
+  # assigned_subcontractor_id : UUID <<FK>>
+  title : VARCHAR
+  description : TEXT
+  status : Vector/Array
+  x_coord : FLOAT
+  y_coord : FLOAT
+  created_by_user_id : UUID <<FK>>
+  created_at : TIMESTAMP
+  updated_at : TIMESTAMP
+}
+
+entity "Attachment" as Attachment {
+  * attachment_id : UUID <<PK>>
+  --
+  # task_id : UUID <<FK>>
+  file_url : VARCHAR
+  uploaded_by_user_id : UUID <<FK>>
+  uploaded_at : TIMESTAMP
+}
+
+User ||--o| Admin : "is a"
+User ||--o| Owner : "is a"
+User ||--o| Con : "is a"
+User ||--o| Sub : "is a"
+
+Admin ||--o{ Project : owns
+Owner ||--o{ Project : owns
+
+Project ||--o{ Floorplan : contains
+Floorplan ||--o{ Task : "stamped with"
+Task ||--o{ Attachment : has
+
+Con |o--o{ Task : "assigned to"
+Sub |o--o{ Task : "assigned to"
+
+@enduml
