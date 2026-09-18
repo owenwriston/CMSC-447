@@ -34,11 +34,11 @@ User --> UC0
 UC0 .> UC0a : <<include>>
 UC0a .> UC0b : <<include>>
 
-UC0b .> UC0c : <<include>>
+UC0c .> UC0b : <<extend>>
 UC0d .> UC0b : <<extend>>
 'UC0f .> UC0b : <<extend>>
 
-'UC0b --> Back : checks for existing users with these fields
+UC0b --> Back : checks for existing users with these fields
 UC0c --> Back : stores new user
 
 @enduml
