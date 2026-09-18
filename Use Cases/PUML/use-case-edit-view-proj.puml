@@ -51,7 +51,7 @@ UC5b .> UC5 : <<extend>>
 UC5b .> UC5a : <<extend>>
 
 ' Editing extends off viewing a project
-UC5 .> UC4 : <<extend>>
+UC4 .> UC5 : <<extend>>
 
 
 
