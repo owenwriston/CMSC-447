@@ -2,10 +2,10 @@
 scale 2
 top to bottom direction
 
-actor "Subcontractor" as Sub
-actor "Contractor" as Con
 actor "Project Owner" as Owner
 actor "Admin" as Admin
+actor "Subcontractor" as Sub
+actor "Contractor" as Con
 actor "User" as User
 actor "Backend" as Back
 
@@ -25,6 +25,7 @@ rectangle "View / Edit Project" {
   usecase "Add/Remove Tasks" as UC4c
   usecase "Edit Task Status" as UC4d
   usecase "Add/Remove Attachments" as UC4e
+  usecase "Upload Additional Floorplans" as UC4f
 }
 
 ' --- Group: View Specific Project ---
@@ -37,6 +38,7 @@ UC4a -[hidden]down-> UC4b
 UC4b -[hidden]down-> UC4c
 UC4c -[hidden]down-> UC4d
 UC4d -[hidden]down-> UC4e
+UC4e -[hidden]down-> UC4f
 
 ' --- Keep groups side by side ---
 UC5 -[hidden]right-> UC4
@@ -54,12 +56,12 @@ UC5 .> UC4 : <<extend>>
 
 
 ' Owner/Admin only
-UC4 .> UC4a : <<include>>
+UC4a .> UC4 : <<extend>>
 
 ' Owner/Admin/Contractor
-UC4 .> UC4b : <<include>>
+UC4b .> UC4 : <<extend>>
 Con --> UC4b
-UC4 .> UC4c : <<include>>
+UC4c .> UC4 : <<extend>>
 Con --> UC4c
 
 note right of Con
@@ -69,17 +71,28 @@ note right of Con
 end note
 
 ' Owner/Admin/Contractor/Subcontractor
-UC4 .> UC4d : <<include>>
+UC4d .> UC4 : <<extend>>
 Con --> UC4d
 Sub --> UC4d
-UC4 .> UC4e : <<include>>
+UC4e .> UC4 : <<extend>>
 Con --> UC4e
 Sub --> UC4e
+
+' Owner/Admin only - uploading additional floorplans
+UC4f .> UC4 : <<extend>>
+Owner --> UC4f
+Admin --> UC4f
+
+note bottom of UC4f
+  Contractor/Subcontractor cannot
+  upload additional floorplans
+end note
 
 UC4a --> Back
 UC4b --> Back
 UC4c --> Back
 UC4d --> Back
 UC4e --> Back
+UC4f --> Back
 
 @enduml

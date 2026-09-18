@@ -2,7 +2,7 @@
 scale 1.5
 hide circle
 skinparam linetype ortho
-left to right direction
+top to bottom direction
 skinparam nodesep 60
 skinparam ranksep 100
 
@@ -87,6 +87,12 @@ entity "Attachment" as Attachment {
   uploaded_by_user_id : UUID <<FK>>
   uploaded_at : TIMESTAMP
 }
+
+' --- Force a more square/grid-like layout ---
+Admin -[hidden]right-> Owner
+Con -[hidden]right-> Sub
+Project -[hidden]right-> Floorplan
+Task -[hidden]right-> Attachment
 
 User ||--o| Admin : "is a"
 User ||--o| Owner : "is a"
